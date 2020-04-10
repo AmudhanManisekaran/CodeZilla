@@ -1,0 +1,33 @@
+##########################################################
+Milestone 1
+
+Member 1 - Amudhan Manisekaran
+Worked on language design and writing grammar rules for expressions, and other regular expressions.
+
+Member 2 - Mayank Rawat
+Worked on exploring different parsing techniques like ANTLR.
+
+Member 3 - Kartik Mathpal	
+Worked on implementation options such as Python and Prolog.
+
+Member 4 - Sandya Manoharan
+Worked on writing grammar rules for declarations, statements, while loop and the if conditional statement.
+
+##########################################################
+
+Milestone 2 (Tentative)
+
+Member 1 - Amudhan Manisekaran
+Will work on interpreter and video.
+
+Member 2 - Mayank Rawat
+Will work on evaluating expressions and documentation.
+
+Member 3 - Kartik Mathpal	
+Will work on the lexical analyzer part.
+
+Member 4 - Sandya Manoharan
+Will work on the parser part.
+
+##########################################################
+
