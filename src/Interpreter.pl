@@ -20,7 +20,7 @@ cl(t_commandLINE(X)) --> c(X).
 
 /* c represents each command */
 c(t_commandASSIGN(X,Y)) --> id(X), [:=], exprSet(Y).
-c(t_commandIFELSE(X,Y,Z)) --> 
+c(t_commandIFELSE(X,Y,Z)) -->
     [if], bool(X), [then], cl(Y), [else], cl(Z), [endif].
 c(t_commandWHILE(X, Y)) --> [while], bool(X), [do], cl(Y), [endwhile].
 c(t_commandBLOCK(X)) --> k(X).
@@ -52,3 +52,140 @@ bool(true) --> [true].
 bool(false) --> [false].
 bool(t_not(X)) --> [not], bool(X).
 bool(t_equal(X, Y)) --> expr(X), [=], expr(Y).
+
+% ================= Evaluation =================== %
+
+/* eliminating left recursion in predicates expr and term */
+:- table expr/3, term/3.
+
+/* program_eval is used to update the input values and evaluate
+ * the parse tree of the given code. */
+
+program_eval(t_program(K), X, Y, Z):-
+    update(x,X,_Env,Env1),
+    update(y,Y,Env1,Env2),
+    evalBlock(K,Env2,New_env),
+    lookup(z,New_env,Z), !.
+
+/* Here, Cut is used to avoid the addition of garbage value to the
+ * environment after one complete evaluation */
+
+/* update is used to revise the value of a variable in the environment */
+update(Id, Val, [], [(Id, Val)]).
+update(Id, Val, [(Id, _)|T], [(Id, Val)|T]).
+update(Id, Val, [H|T], [H|R]):-
+    H \= (Id,_),
+    update(Id, Val, T, R).
+
+/* lookup is used to obtain the values from environment */
+lookup(Id, [(Id, Val)|_], Val).
+lookup(Id, [_|T], Val) :-
+    lookup(Id, T, Val).
+
+/* eval_block is used to evaluate any block of code in the program */
+evalBlock(t_block(X,Y), Env, Env2):-
+    evalDL(X, Env, Env1),
+    evalCL(Y, Env1, Env2).
+
+/* evalDL is used to evaluate the declaration lines consisting of multiple
+ * declarations */
+evalDL(t_declarationLINE(X,Y), Env, Env2):-
+    evalDEC(X, Env, Env1),
+    evalDL(Y, Env1, Env2).
+evalDL(t_declarationLINE(X), Env, Env2):-
+    evalDEC(X, Env, Env2).
+
+/* evalDEC is used to evaluate the individual declarations */
+evalDEC(t_declarationCONS(X,Y), Env, Env1):-
+    update(X, Y, Env, Env1).
+evalDEC(t_declarationVAR(_), Env, Env).
+
+/* evalCL is used to evaluate the command lines consisting of multiple
+ * commands */
+evalCL(t_commandLINE(X,Y), Env, Env2):-
+    evalCMD(X, Env, Env1),
+    evalCL(Y, Env1, Env2).
+evalCL(t_commandLINE(X), Env, Env1):-
+    evalCMD(X, Env, Env1).
+
+/* evalCMD is used to evaluate the individual commands */
+evalCMD(t_commandASSIGN(t_id(X),Y),Env, Env2):-
+    evalExprSet(Y, Env, Env1, Val),
+    update(X, Val, Env1, Env2).
+
+evalCMD(t_commandIFELSE(X,_Y,Z), Env, Env1):-
+    evalBOOL(X,Env,false),
+    evalCL(Z, Env, Env1).
+evalCMD(t_commandIFELSE(X,Y,_Z), Env, Env1):-
+    evalBOOL(X,Env,true),
+    evalCL(Y, Env, Env1).
+
+evalCMD(t_commandWHILE(X,_Y), Env, Env):-
+    evalBOOL(X, Env, false).
+evalCMD(t_commandWHILE(X,Y), Env, Env2):-
+    evalBOOL(X,Env,true),
+    evalCL(Y, Env, Env1),
+    evalCMD(t_commandWHILE(X,Y), Env1, Env2).
+
+evalCMD(t_commandBLOCK(X),Env,Env2):- evalBlock(X, Env, Env2).
+
+/* evalExprSet is used to handle double assignments */
+evalExprSet(t_expr(X),Env, Env2, Val):-
+    evalEXPR(X, Env, Env2, Val).
+evalExprSet(t_assign(I,E),Env,Env2,Val):-
+    evalExprSet(E, Env, Env1, Val),
+    update(I, Val, Env1, Env2).
+
+/* evalEXPR is used to evalute the addition and subtraction expressions*/
+evalEXPR(t_add(X,Y), Env, Env, Val) :-
+   evalEXPR(X, Env, Env, Val1),
+   evalTERM(Y, Env, Env, Val2),
+   Val is Val1 + Val2.
+evalEXPR(t_sub(X,Y), Env, Env2,Val) :-
+    evalEXPR(X, Env, Env1, Val1),
+    evalTERM(Y, Env1, Env2, Val2),Val is Val1 - Val2.
+evalEXPR(X, Env, Env1, Val) :-
+    evalTERM(X, Env, Env1, Val).
+
+/* evalTERM is used to evalute multiplication and division expressions */
+evalTERM(t_div(X,Y), Env, Env2, Val) :-
+    evalTERM(X, Env, Env1, Val1),
+    evalFACT(Y, Env1, Env2, Val2),
+    Val is Val1 / Val2.
+evalTERM(t_mul(X,Y), Env, Env2, Val) :-
+    evalTERM(X, Env, Env1, Val1),
+    evalFACT(Y, Env1, Env2, Val2),
+    Val is Val1 * Val2.
+evalTERM(X, Env, Env, Val) :-
+    evalFACT(X, Env, Env, Val).
+
+/* evalFACT is used to evalute the expressions and match to values or
+ * extension of double assignments */
+evalFACT(t_fact(X),Env, Env, Val) :-
+    evalNUM(X, Env, Val).
+evalFACT(t_fact(X),Env, Env, Val) :-
+    evalExprSet(X, Env, Env, Val).
+
+/* evalNUM is used to match variables and numbers */
+evalNUM(t_num(X), _Env, X).
+evalNUM(t_id(I), Env, Val) :-
+    lookup(I, Env, Val).
+
+/* evalBOOL is used to evaluate statements which have truth values */
+evalBOOL(false, _Env, false).
+evalBOOL(true, _Env, true).
+evalBOOL(t_equal(E1,E2), Env, Val) :-
+    evalEXPR(E1, Env, Env1, Val1),
+    evalEXPR(E2, Env, Env1, Val2),
+    equal(Val1, Val2, Val).
+evalBOOL(t_not(B), Env, Val) :-
+    evalBOOL(B, Env, Val1),
+    not(Val1, Val).
+
+/* not is used toggle between truth values */
+not(false, true).
+not(true, false).
+
+/* equal is used to check if two entities are numerically equal */
+equal(Val1, Val2, false):- Val1 \= Val2.
+equal(Val1, Val2, true):- Val1 = Val2.
