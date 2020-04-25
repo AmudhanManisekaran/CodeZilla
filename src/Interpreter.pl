@@ -88,12 +88,11 @@ bool(t_and(X,Y)) --> expr(X), [and], bool(Y).
 bool(t_or(X,Y)) --> expr(X), [or], bool(Y).
 bool(t_boolcondition(X)) --> compare_bool(X).
 
-compare_bool(t_equal(X, Y)) --> expr(X), [=], expr(Y).
+compare_bool(t_equal(X, Y)) --> expr(X), [=:=], expr(Y).
 compare_bool(t_lessthan(X,Y)) --> expr(X), [<], expr(Y).
 compare_bool(t_greaterthan(X,Y)) --> expr(X), [>], expr(Y).
 compare_bool(t_lessthanequal(X,Y)) --> expr(X), [<=], expr(Y).
 compare_bool(t_greaterthanequal(X,Y)) --> expr(X), [>=], expr(Y).
-
 % ================= Evaluation =================== %
 
 /* eliminating left recursion in predicates expr and term */
