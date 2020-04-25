@@ -1,10 +1,10 @@
 % =========== Parse tree generation ============== %
 
 /* program represents the whole program */
-program(t_program(X)) --> k(X),[.].
+program(t_program(X)) --> ['Start'],[;],k(X),['End'],[;].
 
 /* k represents each block */
-k(t_block(X,Y)) --> [begin], dl(X), [;], cl(Y),[end].
+k(t_block(X,Y)) --> dl(X), [;], cl(Y),[;].
 
 /* dl represents each declaration line */
 dl(t_declarationLINE(X,Y)) --> d(X), [;], dl(Y).
@@ -27,6 +27,8 @@ c(t_commandBLOCK(X)) --> k(X).
 
 exprSet(t_expr(X)) --> expr(X).
 exprSet(t_assign(I,E)) --> id(I), [:=], exprSet(E).
+
+:- table expr/3, term/3.
 
 /* expr is used to generate the parse tree of the expressions */
 expr(t_add(X,Y)) --> expr(X), [+], term(Y).
