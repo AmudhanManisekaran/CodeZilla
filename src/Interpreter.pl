@@ -1,7 +1,7 @@
 % =========== Parse tree generation ============== %
 
 /* program represents the whole program */
-program(t_program(X)) --> ['Start'],[;],k(X),['End'],[;].
+program(t_program(X)) --> [start],[;],k(X),[end],[;].
 
 /* k represents each block */
 k(t_block(X,Y)) --> dl(X), [;], cl(Y),[;].
@@ -11,19 +11,38 @@ dl(t_declarationLINE(X,Y)) --> d(X), [;], dl(Y).
 dl(t_declarationLINE(X)) --> d(X).
 
 /* d represents each declaration */
-d(t_declarationCONS(X,Y)) --> [const], id(X), [=], num(Y).
 d(t_declarationVAR(X)) --> [var], id(X).
-
+d(t_declarationSTR(X)) --> [str], id(X).
 /* cl represents each command line */
 cl(t_commandLINE(X,Y)) --> c(X), [;], cl(Y).
 cl(t_commandLINE(X)) --> c(X).
 
-/* c represents each command */
-c(t_commandASSIGN(X,Y)) --> id(X), [:=], exprSet(Y).
-c(t_commandIFELSE(X,Y,Z)) -->
+c(t_command_assign(X)) --> assign(X).
+c(t_command_if(X)) --> if(X).
+c(t_command_ternary(X)) --> ternary(X).
+c(t_command_loops(X)) --> loops(X).
+c(t_command_show(X)) --> show(X).
+c(t_command_read(X)) --> read(X).
+c(t_command_block(X)) --> k(X).
+
+
+assign(t_assign(X,Y)) --> id(X), [:=], exprSet(Y).
+
+if(t_if(X,Y,Z)) -->
     [if], bool(X), [then], cl(Y), [else], cl(Z), [endif].
-c(t_commandWHILE(X, Y)) --> [while], bool(X), [do], cl(Y), [endwhile].
-c(t_commandBLOCK(X)) --> k(X).
+
+ternary(t_ternary(U,X,Y,Z)) --> id(U), [:=], bool(X), [$], 
+    exprSet(Y), [/], exprSet(Z). 
+        
+loops(t_loops(X)) -->  while(X).
+
+show(t_show(X)) --> [show], data(X).
+read(t_read(X)) --> [read], id(X).
+
+data(t_data(X)) --> id(X).
+
+while(t_WHILE(X, Y)) --> [while], bool(X), [do], cl(Y), [endwhile].
+
 
 exprSet(t_expr(X)) --> expr(X).
 exprSet(t_assign(I,E)) --> id(I), [:=], exprSet(E).
