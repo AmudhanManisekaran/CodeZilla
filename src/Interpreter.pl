@@ -68,8 +68,7 @@ fact(t_fact(X)) --> ['('], exprSet(X), [')'].
 /* num is used to generate the parse tree of numbers and variables */
 num(t_num(X)) --> [X], {number(X)}.
 id(t_id(I)) --> [I], {atom(I)}.
-str(t_str(I)) --> [<<],[I], {atom(I)},[>>].
-
+str(t_str(I)) --> [<<],[I], {string(I)},[>>].
 /* bool represents boolean expressions */
 bool(true) --> [true].
 bool(false) --> [false].
