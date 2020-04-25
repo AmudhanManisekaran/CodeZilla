@@ -26,7 +26,7 @@ assign(t_assign_var(X,Y)) --> id(X), [:=], exprSet(Y).
 if(t_if(X,Y)) -->
     [if], bool(X), [then], cl(Y), [endif].
 
-ifelse(t_if(X,Y,Z)) -->
+ifelse(t_ifelse(X,Y,Z)) -->
     [if], bool(X), [then], cl(Y), [else], cl(Z), [endif].
 
 ternary(t_ternary(U,X,Y,Z)) --> id(U), [:=], bool(X), [$], 
