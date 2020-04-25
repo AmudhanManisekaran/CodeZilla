@@ -20,8 +20,8 @@ c(t_command_show(X)) --> show(X).
 c(t_command_read(X)) --> read(X).
 c(t_command_block(X)) --> k(X).
 
-assign(t_assign_str(X,Y)) --> id(X), [:=], str(Y).
-assign(t_assign_var(X,Y)) --> id(X), [:=], exprSet(Y).
+assign(t_assign_str(X,Y)) --> id(X), [:],[=], str(Y).
+assign(t_assign_var(X,Y)) --> id(X), [:],[=], exprSet(Y).
 
 if(t_if(X,Y)) -->
     [if], bool(X), [then], cl(Y), [endif].
@@ -29,7 +29,7 @@ if(t_if(X,Y)) -->
 ifelse(t_ifelse(X,Y,Z)) -->
     [if], bool(X), [then], cl(Y), [else], cl(Z), [endif].
 
-ternary(t_ternary(U,X,Y,Z)) --> id(U), [:=], bool(X), [$], 
+ternary(t_ternary(U,X,Y,Z)) --> id(U), [:],[=], bool(X), [$], 
     exprSet(Y), [/], exprSet(Z). 
         
 loops(t_loops(X)) -->  while(X); for(X); trad_for(X).
@@ -41,7 +41,7 @@ data(t_data(X)) --> str(X) ; id(X).
 
 while(t_while(X, Y)) --> [while], bool(X), [do], cl(Y), [endwhile].
 
-trad_for(t_trad_for(X,V,Y,Z,T)) --> [for], ['('], id(X), [:=], value(V),[;], 
+trad_for(t_trad_for(X,V,Y,Z,T)) --> [for], ['('], id(X), [:],[=], value(V),[;], 
     bool(Y), [;], exprSet(Z), [')'], [:], cl(T).
 
 for(t_for(U,X,Y,C)) --> [for], id(U), 
@@ -49,7 +49,7 @@ for(t_for(U,X,Y,C)) --> [for], id(U),
     [:], cl(C).
     
 exprSet(t_expr(X)) --> expr(X).
-exprSet(t_assign(I,E)) --> id(I), [:=], exprSet(E).
+exprSet(t_assign(I,E)) --> id(I), [:],[=], exprSet(E).
 
 :- table expr/3, term/3.
 
@@ -62,7 +62,7 @@ term(t_mul(X,Y)) --> term(X), [*], fact(Y).
 term(X) --> fact(X).
 
 fact(t_fact(X)) --> value(X).
-fact(t_fact(X)) --> ['('], exprSet(X), [')'].
+fact(t_fact(X)) --> ["("], exprSet(X), [")"].
 
 value(t_value(X)) --> id(X); int(X) ; float(X).
 
