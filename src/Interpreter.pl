@@ -1,19 +1,14 @@
 % =========== Parse tree generation ============== %
-
-/* program represents the whole program */
 program(t_program(X)) --> [start],[;],k(X),[end],[;].
 
-/* k represents each block */
 k(t_block(X,Y)) --> dl(X), [;], cl(Y),[;].
 
-/* dl represents each declaration line */
 dl(t_declarationLINE(X,Y)) --> d(X), [;], dl(Y).
 dl(t_declarationLINE(X)) --> d(X).
 
-/* d represents each declaration */
 d(t_declarationVAR(X)) --> [var], id(X).
 d(t_declarationSTR(X)) --> [str], id(X).
-/* cl represents each command line */
+
 cl(t_commandLINE(X,Y)) --> c(X), [;], cl(Y).
 cl(t_commandLINE(X)) --> c(X).
 
@@ -27,7 +22,6 @@ c(t_command_block(X)) --> k(X).
 
 assign(t_assign_str(X,Y)) --> id(X), [:=], str(Y).
 assign(t_assign_var(X,Y)) --> id(X), [:=], exprSet(Y).
-
 
 if(t_if(X,Y)) -->
     [if], bool(X), [then], cl(Y), [endif].
@@ -59,30 +53,25 @@ exprSet(t_assign(I,E)) --> id(I), [:=], exprSet(E).
 
 :- table expr/3, term/3.
 
-/* expr is used to generate the parse tree of the expressions */
 expr(t_add(X,Y)) --> expr(X), [+], term(Y).
 expr(t_sub(X,Y)) --> expr(X), [-], term(Y).
 expr(X) --> term(X).
 
-/* term is used to generate the parse tree of the terms */
 term(t_div(X,Y)) --> term(X), [/], fact(Y).
 term(t_mul(X,Y)) --> term(X), [*], fact(Y).
 term(X) --> fact(X).
 
-/* fact is used to generate the parse tree of the terms */
 fact(t_fact(X)) --> value(X).
 fact(t_fact(X)) --> ['('], exprSet(X), [')'].
 
-/* num is used to generate the parse tree of numbers and variables */
-value(t_value(X)) --> id(X); num(X) ; float(X).
+value(t_value(X)) --> id(X); int(X) ; float(X).
 
-num(t_num(X)) --> [X], {number(X)}.
+int(t_int(X)) --> [X], {integer(X)}.
 float(t_float(X)) --> [X], {float(X)}.
 id(t_id(I)) --> [I], {atom(I)}.
 
 str(t_str(I)) --> [<<],[I], {string(I)},[>>].
 
-/* bool represents boolean expressions */
 bool(true) --> [true].
 bool(false) --> [false].
 bool(t_not(X)) --> [not], bool(X).
@@ -95,6 +84,7 @@ compare_bool(t_lessthan(X,Y)) --> expr(X), [<], expr(Y).
 compare_bool(t_greaterthan(X,Y)) --> expr(X), [>], expr(Y).
 compare_bool(t_lessthanequal(X,Y)) --> expr(X), [<=], expr(Y).
 compare_bool(t_greaterthanequal(X,Y)) --> expr(X), [>=], expr(Y).
+
 % ================= Evaluation =================== %
 
 /* eliminating left recursion in predicates expr and term */
