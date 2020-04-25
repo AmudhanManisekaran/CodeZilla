@@ -1,18 +1,12 @@
-# lexer
-
 from sly import Lexer
-import pickle 
 import simplejson
-import os
 
 class CalcLexer(Lexer):
-    # Set of token names.   This is always required
     tokens = { NUMBER, ID, WHILE, IF, ELSE, PRINT,
                PLUS, MINUS, TIMES, DIVIDE, ASSIGN,
                EQ, LT, LE, GT, GE, NE, FOR, ENDWHILE, ENDIF, SHOW, DO, END, LTA, GTA }
 
-
-    literals = { '(', ')', '{', '}', ';', ',', ':', '\'', ':=' }
+    literals = { '(', ')', '{', '}', ';', ',', ':', '\'', ':=' ,'.'}
 
     # String containing ignored characters
     ignore = ' \t'
@@ -29,7 +23,7 @@ class CalcLexer(Lexer):
     GE      = r'>='
     GT      = r'>'
     NE      = r'!='
- 
+
 
     @_(r'\d+')
     def NUMBER(self, t):
@@ -46,7 +40,7 @@ class CalcLexer(Lexer):
     ID['endwhile'] = ENDWHILE
     ID['endif'] = ENDIF
     ID['show'] = SHOW
-    ID['do'] = DO 
+    ID['do'] = DO
     ID['End'] = END
     ID['<<'] = LTA
     ID['>>'] = GTA
@@ -66,25 +60,35 @@ if __name__ == '__main__':
 
     print("\n****************Start Execution****************")
     inputFile = input('Lexer > ')
+
     str = open(inputFile, 'r').read()
     arr = []
     lexer = CalcLexer()
     for tok in lexer.tokenize(str):
-       arr.append(tok.value)     
+       arr.append(tok.value)
     f = open('output.tok','w')
     simplejson.dump(arr,f)
     f.close()
-         
+
     f = open('output.tok','r')
     arr =  []
     result = []
     arr = f.read()
+    # print(arr)
     str1=""
+    str2=""
+
     for x in arr:
         x = x.replace('"','')
-        str1+=x  
+        str1+=x
+
+    for x in str1:
+        x = x.replace('(','"("')
+        x = x.replace(')','")"')
+        str2+=x
+
     file = open('result.tok','w')
-    file.write(str1)
+    file.write(str2)
     file.close()
     print("\nresult.tok generated!!!")
     print("\n****************End Of Execution****************")
