@@ -43,7 +43,7 @@ loops(t_loops(X)) -->  while(X); for(X); trad_for(X).
 show(t_show(X)) --> [show], data(X).
 read(t_read(X)) --> [read], id(X).
 
-data(t_data(X)) --> id(X).
+data(t_data(X)) --> str(X) ; id(X).
 
 while(t_while(X, Y)) --> [while], bool(X), [do], cl(Y), [endwhile].
 
@@ -74,9 +74,12 @@ fact(t_fact(X)) --> value(X).
 fact(t_fact(X)) --> ['('], exprSet(X), [')'].
 
 /* num is used to generate the parse tree of numbers and variables */
-value(t_value(X)) --> id(X);num(X).
+value(t_value(X)) --> id(X); num(X) ; float(X).
+
 num(t_num(X)) --> [X], {number(X)}.
+float(t_float(X)) --> [X], {float(X)}.
 id(t_id(I)) --> [I], {atom(I)}.
+
 str(t_str(I)) --> [<<],[I], {string(I)},[>>].
 
 /* bool represents boolean expressions */
