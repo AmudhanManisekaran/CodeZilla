@@ -70,8 +70,7 @@ term(t_mul(X,Y)) --> term(X), [*], fact(Y).
 term(X) --> fact(X).
 
 /* fact is used to generate the parse tree of the terms */
-fact(t_fact(X)) --> num(X).
-fact(t_fact(X)) --> id(X).
+fact(t_fact(X)) --> value(X).
 fact(t_fact(X)) --> ['('], exprSet(X), [')'].
 
 /* num is used to generate the parse tree of numbers and variables */
