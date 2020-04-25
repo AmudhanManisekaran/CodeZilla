@@ -41,12 +41,12 @@ data(t_data(X)) --> str(X) ; id(X).
 
 while(t_while(X, Y)) --> [while], bool(X), [do], cl(Y), [endwhile].
 
-trad_for(t_trad_for(X,V,Y,Z)) --> [for], ['('], id(X), [:=], value(V),[;], 
-    bool(Y), [;], exprSet(Z), [')'].
+trad_for(t_trad_for(X,V,Y,Z,T)) --> [for], ['('], id(X), [:=], value(V),[;], 
+    bool(Y), [;], exprSet(Z), [')'], [:], cl(T).
 
 for(t_for(U,X,Y,C)) --> [for], id(U), 
-    [inrange], ['('], value(X), value(Y), [')'],
-    [do], cl(C).
+    [in], [range], ['('], value(X), [,], value(Y), [')'],
+    [:], cl(C).
     
 exprSet(t_expr(X)) --> expr(X).
 exprSet(t_assign(I,E)) --> id(I), [:=], exprSet(E).
