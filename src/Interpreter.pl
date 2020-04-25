@@ -18,7 +18,7 @@ cl(t_commandLINE(X,Y)) --> c(X), [;], cl(Y).
 cl(t_commandLINE(X)) --> c(X).
 
 c(t_command_assign(X)) --> assign(X).
-c(t_command_if(X)) --> if(X).
+c(t_command_if(X)) --> if(X) ; ifelse(X).
 c(t_command_ternary(X)) --> ternary(X).
 c(t_command_loops(X)) --> loops(X).
 c(t_command_show(X)) --> show(X).
@@ -29,22 +29,31 @@ assign(t_assign_str(X,Y)) --> id(X), [:=], str(Y).
 assign(t_assign_var(X,Y)) --> id(X), [:=], exprSet(Y).
 
 
-if(t_if(X,Y,Z)) -->
+if(t_if(X,Y)) -->
+    [if], bool(X), [then], cl(Y), [endif].
+
+ifelse(t_if(X,Y,Z)) -->
     [if], bool(X), [then], cl(Y), [else], cl(Z), [endif].
 
 ternary(t_ternary(U,X,Y,Z)) --> id(U), [:=], bool(X), [$], 
     exprSet(Y), [/], exprSet(Z). 
         
-loops(t_loops(X)) -->  while(X).
+loops(t_loops(X)) -->  while(X); for(X); trad_for(X).
 
 show(t_show(X)) --> [show], data(X).
 read(t_read(X)) --> [read], id(X).
 
 data(t_data(X)) --> id(X).
 
-while(t_WHILE(X, Y)) --> [while], bool(X), [do], cl(Y), [endwhile].
+while(t_while(X, Y)) --> [while], bool(X), [do], cl(Y), [endwhile].
 
+trad_for(t_trad_for(X,V,Y,Z)) --> [for], ['('], id(X), [:=], value(V),[;], 
+    bool(Y), [;], exprSet(Z), [')'].
 
+for(t_for(U,X,Y,C)) --> [for], id(U), 
+    [inrange], ['('], value(X), value(Y), [')'],
+    [do], cl(C).
+    
 exprSet(t_expr(X)) --> expr(X).
 exprSet(t_assign(I,E)) --> id(I), [:=], exprSet(E).
 
@@ -66,14 +75,24 @@ fact(t_fact(X)) --> id(X).
 fact(t_fact(X)) --> ['('], exprSet(X), [')'].
 
 /* num is used to generate the parse tree of numbers and variables */
+value(t_value(X)) --> id(X);num(X).
 num(t_num(X)) --> [X], {number(X)}.
 id(t_id(I)) --> [I], {atom(I)}.
 str(t_str(I)) --> [<<],[I], {string(I)},[>>].
+
 /* bool represents boolean expressions */
 bool(true) --> [true].
 bool(false) --> [false].
 bool(t_not(X)) --> [not], bool(X).
-bool(t_equal(X, Y)) --> expr(X), [=], expr(Y).
+bool(t_and(X,Y)) --> expr(X), [and], bool(Y).
+bool(t_or(X,Y)) --> expr(X), [or], bool(Y).
+bool(t_boolcondition(X)) --> compare_bool(X).
+
+compare_bool(t_equal(X, Y)) --> expr(X), [=], expr(Y).
+compare_bool(t_lessthan(X,Y)) --> expr(X), [<], expr(Y).
+compare_bool(t_greaterthan(X,Y)) --> expr(X), [>], expr(Y).
+compare_bool(t_lessthanequal(X,Y)) --> expr(X), [<=], expr(Y).
+compare_bool(t_greaterthanequal(X,Y)) --> expr(X), [>=], expr(Y).
 
 % ================= Evaluation =================== %
 
