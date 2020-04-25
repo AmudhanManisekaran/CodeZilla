@@ -25,8 +25,9 @@ c(t_command_show(X)) --> show(X).
 c(t_command_read(X)) --> read(X).
 c(t_command_block(X)) --> k(X).
 
+assign(t_assign_str(X,Y)) --> id(X), [:=], str(Y).
+assign(t_assign_var(X,Y)) --> id(X), [:=], exprSet(Y).
 
-assign(t_assign(X,Y)) --> id(X), [:=], exprSet(Y).
 
 if(t_if(X,Y,Z)) -->
     [if], bool(X), [then], cl(Y), [else], cl(Z), [endif].
@@ -67,6 +68,7 @@ fact(t_fact(X)) --> ['('], exprSet(X), [')'].
 /* num is used to generate the parse tree of numbers and variables */
 num(t_num(X)) --> [X], {number(X)}.
 id(t_id(I)) --> [I], {atom(I)}.
+str(t_str(I)) --> [<<],[I], {atom(I)},[>>].
 
 /* bool represents boolean expressions */
 bool(true) --> [true].
