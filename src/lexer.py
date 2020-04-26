@@ -79,25 +79,38 @@ if __name__ == '__main__':
     arr = f.read()
     str1=""
     str2=""
+    str3=""
 
+    print(arr)
+    
     for x in arr:
         x = x.replace('"','')
         str1+=x
 
+    print(str1)
+
     for x in str1:
-        x = x.replace(';','SEMICOLON')
-        x = x.replace('(','OPEN_PARA')
-        x = x.replace(')','CLOSE_PARA')
-        x = x.replace(':','COLON')
-        x = x.replace('=','EQUAL')
-        x = x.replace('<','LESS_THAN')
-        x = x.replace('>','GREATER_THAN')
-        x = x.replace(']','].')
+        x = x.replace('<','<"')
         str2+=x
 
+    print(str2)
+
+    for x in str2:
+        x = x.replace(';','semicolon')
+        x = x.replace('(','open_para')
+        x = x.replace(')','close_para')
+        x = x.replace(':','colon')
+        x = x.replace('=','equal')
+        x = x.replace('<<','<<"')
+        x = x.replace('>>','">>')
+        x = x.replace('<','less_than')
+        x = x.replace('>','greater_than')
+        x = x.replace(']','].')
+        str3+=x
+
     file = open('result.tok','w')
-    file.write(str2)
+    file.write(str3)
     file.close()
 
-    print(str2)
+    print(str3)
     print("\n****************End Of Execution****************")

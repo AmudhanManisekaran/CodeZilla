@@ -1,5 +1,5 @@
 % =========== Parse tree generation ============== %
-:- table expr/3, term/3.
+:- table expr/3, term/3, bool/3.
 
 :- style_check(-singleton).
 
@@ -17,29 +17,28 @@ codezilla(FileName) :-
 %====================================================================================================================
 % =========== Parse tree generation ============== %
 parser(t_parser(X)) --> program(X).
-program(t_program(X)) --> [start],[SEMICOLON],k(X),[end],[SEMICOLON].
+program(t_program(X)) --> [start],[semicolon],k(X),[end],[semicolon].
 
-k(t_block(X,Y)) --> dl(X), [SEMICOLON], cl(Y), [SEMICOLON].
+k(t_block(X,Y)) --> dl(X), [semicolon], cl(Y), [semicolon].
 
-dl(t_declarationLINE(X,Y)) --> d(X), [SEMICOLON], dl(Y).
+dl(t_declarationLINE(X,Y)) --> d(X), [semicolon], dl(Y).
 dl(t_declarationLINE(X)) --> d(X).
 
 d(t_declarationVAR(X)) --> [var], id(X).
 d(t_declarationSTR(X)) --> [str], id(X).
 
-cl(t_commandLINE(X,Y)) --> c(X), [SEMICOLON], cl(Y).
+cl(t_commandLINE(X,Y)) --> c(X), [semicolon], cl(Y).
 cl(t_commandLINE(X)) --> c(X).
 
 c(t_command_assign(X)) --> assign(X).
 c(t_command_if(X)) --> if(X) ; ifelse(X).
-/*c(t_command_ternary(X)) --> ternary(X).*/
+c(t_command_ternary(X)) --> ternary(X).
 c(t_command_loops(X)) --> loops(X).
 c(t_command_show(X)) --> show(X).
 c(t_command_read(X)) --> readvar(X).
-c(t_command_block(X)) --> k(X).
 
-assign(t_assign_str(X,Y)) --> id(X),[EQUAL], str(Y).
-assign(t_assign_var(X,Y)) --> id(X),[EQUAL], exprSet(Y).
+assign(t_assign_str(X,Y)) --> id(X),[equal], str(Y).
+assign(t_assign_var(X,Y)) --> id(X),[equal], exprSet(Y).
 
 if(t_if(X,Y)) -->
     [if], bool(X), [then], cl(Y), [endif].
@@ -47,28 +46,27 @@ if(t_if(X,Y)) -->
 ifelse(t_ifelse(X,Y,Z)) -->
     [if], bool(X), [then], cl(Y), [else], cl(Z), [endif].
 
-/*ternary(t_ternary(U,X,Y,Z)) --> id(U),[EQUAL], bool(X), [ $ ],
-    exprSet(Y), [/], exprSet(Z).
-*/
-
 loops(t_loops(X)) -->  while(X); for(X); trad_for(X).
 
+ternary(t_ternary(U,X,Y,Z)) --> id(U),[equal], bool(X), [ $ ],
+    exprSet(Y), [/], exprSet(Z).
+
 show(t_show(X)) --> [show], data(X).
-readvar(t_read(X)) --> [readvar], id(X).
+readvar(t_read(X)) --> [read], id(X).
 
 data(t_data(X)) --> str(X) ; id(X).
 
 while(t_while(X, Y)) --> [while], bool(X), [do], cl(Y), [endwhile].
 
-trad_for(t_trad_for(X,V,Y,Z,T)) --> [for], [OPEN_PARA], id(X), [EQUAL], value(V),[SEMICOLON],
-    bool(Y), [SEMICOLON], exprSet(Z), [CLOSE_PARA], [COLON], cl(T).
+trad_for(t_trad_for(X,V,Y,Z,T)) --> [for], [open_para], id(X), [equal], value(V),[semicolon],
+    bool(Y), [semicolon], exprSet(Z), [close_para], [colon], cl(T).
 
 for(t_for(U,X,Y,C)) --> [for], id(U),
-    [in], [range], [OPEN_PARA], value(X), [COLON], value(Y), [CLOSE_PARA],
-    [COLON], cl(C).
+    [in], [range], [open_para], value(X), [colon], value(Y), [close_para],
+    [colon], cl(C).
 
 exprSet(t_expr(X)) --> expr(X).
-exprSet(t_assign(I,E)) --> id(I),[EQUAL], exprSet(E).
+exprSet(t_assign(I,E)) --> id(I),[equal], exprSet(E).
 
 expr(t_add(X,Y)) --> expr(X), [+], term(Y).
 expr(t_sub(X,Y)) --> expr(X), [-], term(Y).
@@ -78,8 +76,9 @@ term(t_div(X,Y)) --> term(X), [/], fact(Y).
 term(t_mul(X,Y)) --> term(X), [*], fact(Y).
 term(X) --> fact(X).
 
+fact(t_fact_para(X)) --> [open_para], exprSet(X), [close_para].
 fact(t_fact(X)) --> value(X).
-fact(t_fact(X)) --> [OPEN_PARA], exprSet(X), [CLOSE_PARA].
+
 
 value(t_value(X)) --> id(X); int1(X) ; float(X).
 
@@ -87,17 +86,20 @@ int1(t_int(X)) --> [X], {integer(X)}.
 float(t_float(X)) --> [X], {float(X)}.
 id(t_id(I)) --> [I], {atom(I)}.
 
-str(t_str(I)) --> [LESS_THAN],[LESS_THAN],[I], {string(I)},[GREATER_THAN],[GREATER_THAN].
+/* str(t_str(I)) --> [less_than],[less_than],[I], {string(I)},[greater_than],[greater_than]. */
+str(t_str(I)) --> [less_than],[less_than], [S], {string(S)}, [greater_than],[greater_than].
 
 bool(true) --> [true].
 bool(false) --> [false].
 bool(t_not(X)) --> [not], bool(X).
-bool(t_and(X,Y)) --> expr(X), [and], bool(Y).
-bool(t_or(X,Y)) --> expr(X), [or], bool(Y).
+bool(t_and(X,Y)) --> bool(X), [and], bool(Y).
+bool(t_or(X,Y)) --> bool(X), [or], bool(Y).
 bool(t_boolcondition(X)) --> compare_bool(X).
+bool(t_boolexpr(X)) --> exprSet(X).
 
-compare_bool(t_equal(X, Y)) --> expr(X), [EQUALEQUAL], expr(Y).
-compare_bool(t_lessthan(X,Y)) --> expr(X), [LESS_THAN], expr(Y).
-compare_bool(t_greaterthan(X,Y)) --> expr(X), [GREATER_THAN], expr(Y).
-compare_bool(t_lessthanequal(X,Y)) --> expr(X), [LESS_THANEQUAL], expr(Y).
-compare_bool(t_greaterthanequal(X,Y)) --> expr(X), [GREATER_THANEQUAL], expr(Y).
+compare_bool(t_greaterthanequal(X,Y)) --> exprSet(X), [greater_thanequal], exprSet(Y).
+compare_bool(t_greaterthan(X,Y)) --> exprSet(X), [greater_than], exprSet(Y).
+compare_bool(t_equal(X, Y)) --> exprSet(X), [equalequal], exprSet(Y).
+compare_bool(t_lessthan(X,Y)) --> exprSet(X), [less_than], exprSet(Y).
+compare_bool(t_lessthanequal(X,Y)) --> exprSet(X), [less_thanequal], exprSet(Y).
+
