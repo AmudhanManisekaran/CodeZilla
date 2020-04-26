@@ -4,9 +4,9 @@ import simplejson
 class CalcLexer(Lexer):
     tokens = { NUMBER, ID, WHILE, IF, ELSE, PRINT,
                PLUS, MINUS, TIMES, DIVIDE, ASSIGN,
-               EQ, LT, LE, GT, GE, NE, FOR, ENDWHILE, ENDIF, SHOW, DO, END, LTA, GTA }
+               EQ, LT, LE, GT, GE, NE, FOR, ENDWHILE, ENDIF, SHOW, DO, END, LTA, GTA ,GTE,LTE}
 
-    literals = { '(', ')', '{', '}', ';', ',', ':', '\'', ':=' ,'.'}
+    literals = { '[',']','(', ')', '{', '}', ';', ',', ':', '\'', ':=' ,'.','$'}
 
     # String containing ignored characters
     ignore = ' \t'
@@ -44,6 +44,8 @@ class CalcLexer(Lexer):
     ID['End'] = END
     ID['<<'] = LTA
     ID['>>'] = GTA
+    ID['>='] = GTE
+    ID['<='] = LTE
 
     ignore_comment = r'\#.*'
 
@@ -53,13 +55,14 @@ class CalcLexer(Lexer):
         self.lineno += t.value.count('\n')
 
     def error(self, t):
-        print('Line %d: Bad character %r' % (self.lineno, t.value[0]))
+        # print('Line %d: Bad character %r' % (self.lineno, t.value[0]))
         self.index += 1
 
 if __name__ == '__main__':
 
-    print("\n****************Start Execution****************")
-    inputFile = input('Lexer > ')
+    print("\n****************Start Execution****************\n")
+    # inputFile = input('Lexer > ')
+    inputFile = 'pro.cz'
 
     str = open(inputFile, 'r').read()
     arr = []
@@ -74,7 +77,6 @@ if __name__ == '__main__':
     arr =  []
     result = []
     arr = f.read()
-    # print(arr)
     str1=""
     str2=""
 
@@ -83,12 +85,19 @@ if __name__ == '__main__':
         str1+=x
 
     for x in str1:
-        x = x.replace('(','"("')
-        x = x.replace(')','")"')
+        x = x.replace(';','SEMICOLON')
+        x = x.replace('(','OPEN_PARA')
+        x = x.replace(')','CLOSE_PARA')
+        x = x.replace(':','COLON')
+        x = x.replace('=','EQUAL')
+        x = x.replace('<','LESS_THAN')
+        x = x.replace('>','GREATER_THAN')
+        x = x.replace(']','].')
         str2+=x
 
     file = open('result.tok','w')
     file.write(str2)
     file.close()
-    print("\nresult.tok generated!!!")
+
+    print(str2)
     print("\n****************End Of Execution****************")
