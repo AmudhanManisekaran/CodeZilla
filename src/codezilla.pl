@@ -10,9 +10,9 @@ readFile(File, Final):-
 
 % Read the program from a file and returns the parse tree
 codezilla(FileName) :-
-			readFile(FileName, Tokens),
-			parser(ParseTree, Tokens, []),
-			write(ParseTree).
+            readFile(FileName, Tokens),
+            parser(ParseTree, Tokens, []),
+            write(ParseTree).
 
 %====================================================================================================================
 % =========== Parse tree generation ============== %
@@ -58,11 +58,12 @@ data(t_data(X)) --> str(X) ; id(X).
 
 while(t_while(X, Y)) --> [while], bool(X), [do], cl(Y), [endwhile].
 
-trad_for(t_trad_for(X,V,Y,Z,T)) --> [for], [open_para], id(X), [equal], value(V),[semicolon],
+trad_for(t_trad_for(X,V,Y,Z,T)) --> [for], [open_para], 
+    id(X), [equal], value(V),[semicolon],
     bool(Y), [semicolon], exprSet(Z), [close_para], [colon], cl(T).
 
 for(t_for(U,X,Y,C)) --> [for], id(U),
-    [in], [range], [open_para], value(X), [colon], value(Y), [close_para],
+    [inrange], [open_para], value(X), [colon], value(Y), [close_para],
     [colon], cl(C).
 
 exprSet(t_expr(X)) --> expr(X).
