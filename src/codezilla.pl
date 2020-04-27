@@ -49,10 +49,10 @@ ifelse(t_ifelse(X,Y,Z)) -->
 loops(t_loops(X)) -->  while(X); for(X); trad_for(X).
 
 ternary(t_ternary(U,X,Y,Z)) --> id(U),[equal], bool(X), [ $ ],
-    exprSet(Y), [/], exprSet(Z).
+    exprSet(Y), [/], exprSet(Z), [endternary].
 
-show(t_show(X)) --> [show], data(X).
-readvar(t_read(X)) --> [read], id(X).
+show(t_show(X)) --> [show], data(X), [endshow].
+readvar(t_read(X)) --> [read], id(X), [endread].
 
 data(t_data(X)) --> str(X) ; id(X).
 
@@ -60,11 +60,11 @@ while(t_while(X, Y)) --> [while], bool(X), [do], cl(Y), [endwhile].
 
 trad_for(t_trad_for(X,V,Y,Z,T)) --> [for], [open_para], 
     id(X), [equal], value(V),[semicolon],
-    bool(Y), [semicolon], exprSet(Z), [close_para], [colon], cl(T).
+    bool(Y), [semicolon], exprSet(Z), [close_para], [colon], cl(T), [endfor].
 
 for(t_for(U,X,Y,C)) --> [for], id(U),
     [inrange], [open_para], value(X), [colon], value(Y), [close_para],
-    [colon], cl(C).
+    [colon], cl(C), [endfor].
 
 exprSet(t_expr(X)) --> expr(X).
 exprSet(t_assign(I,E)) --> id(I),[equal], exprSet(E).
