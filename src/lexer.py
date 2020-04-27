@@ -26,6 +26,8 @@ class CalcLexer(Lexer):
     SS      = r'<<'
     SEMICOLON = ';'
     START = 'start'
+    ENDIF = 'endif'
+    ENDWHILE = 'endwhile'
     END = 'end'
     VAR = 'var'
 
@@ -42,8 +44,8 @@ class CalcLexer(Lexer):
     ID['while'] = WHILE
     ID['print'] = PRINT
     ID['for'] = FOR
-    ID['endwhile'] = ENDWHILE
-    ID['endif'] = ENDIF
+    # ID['endwhile'] = ENDWHILE
+    # ID['endif'] = ENDIF
     ID['show'] = SHOW
     ID['do'] = DO
     ID['<<'] = LTA
@@ -123,5 +125,5 @@ if __name__ == '__main__':
     file.write(str2)
     file.close()
 
-    # print(str3)
+    print(str2)
     print("\n****************End Of Execution****************")
