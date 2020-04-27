@@ -2,7 +2,7 @@ from sly import Lexer
 import simplejson
 
 class CalcLexer(Lexer):
-    tokens = { NUMBER, ID, WHILE, IF, ELSE, PRINT, START, SEMICOLON, VAR,
+    tokens = { INT, ID, WHILE, IF, ELSE, PRINT, START, SEMICOLON, VAR, FLOAT,
                PLUS, MINUS, TIMES, DIVIDE, ASSIGN, STRING, ENDFOR, ENDTERNARY, ENDSHOW, ENDREAD,
                EQ, LT, LE, GT, GE, NE, FOR, ENDWHILE, ENDIF, SHOW, DO, END, LTA, GTA ,GTE,LTE,SS}
 
@@ -35,13 +35,16 @@ class CalcLexer(Lexer):
     END = 'end'
     VAR = 'var'
 
-    @_(r'\d+')
-    def NUMBER(self, t):
-        t.value = int(t.value)
-        return t
+    # @_(r'\d+')
+    # def NUMBER(self, t):
+    #     t.value = int(t.value)
+    #     return t
 
     # Identifiers and keywords
     STRING = r'[a-zA-Z_][a-zA-Z_][a-zA-Z0-9_]*'
+    FLOAT = r'[0-9_]*[.][0-9_]*'
+    INT = r'[0-9_][0-9_]*'
+
     ID = r'[a-zA-Z_]'
     ID['if'] = IF
     ID['else'] = ELSE
@@ -76,6 +79,9 @@ if __name__ == '__main__':
     arr = []
     lexer = CalcLexer()
     string = 0
+
+    # for tok in lexer.tokenize(str):
+    #     print(tok)
 
     for tok in lexer.tokenize(str):
 
