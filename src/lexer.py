@@ -4,7 +4,8 @@ import simplejson
 class CalcLexer(Lexer):
     tokens = { INT, ID, WHILE, IF, ELSE, PRINT, START, SEMICOLON, VAR, FLOAT,
                PLUS, MINUS, TIMES, DIVIDE, ASSIGN, STRING, ENDFOR, ENDTERNARY, ENDSHOW, ENDREAD,
-               EQ, LT, LE, GT, GE, NE, FOR, ENDWHILE, ENDIF, SHOW, DO, END, LTA, GTA ,GTE,LTE,SS}
+               EQ, LT, LE, GT, GE, NE, FOR, ENDWHILE, ENDIF, SHOW, DO, END, LTA, GTA ,GTE,LTE,SS,
+               TRUE, FALSE}
 
     literals = { '[',']','(', ')', '{', '}', ';', ',', ':', '\'', ':=' ,'.','$','#','@'}
 
@@ -34,6 +35,8 @@ class CalcLexer(Lexer):
     ENDWHILE = 'endwhile'
     END = 'end'
     VAR = 'var'
+    TRUE = 'true'
+    FALSE = 'false'
 
     # @_(r'\d+')
     # def NUMBER(self, t):
