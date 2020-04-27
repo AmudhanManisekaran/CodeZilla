@@ -3,7 +3,7 @@ import simplejson
 
 class CalcLexer(Lexer):
     tokens = { NUMBER, ID, WHILE, IF, ELSE, PRINT, START, SEMICOLON, VAR,
-               PLUS, MINUS, TIMES, DIVIDE, ASSIGN, STRING,
+               PLUS, MINUS, TIMES, DIVIDE, ASSIGN, STRING, ENDFOR, ENDTERNARY, ENDSHOW, ENDREAD,
                EQ, LT, LE, GT, GE, NE, FOR, ENDWHILE, ENDIF, SHOW, DO, END, LTA, GTA ,GTE,LTE,SS}
 
     literals = { '[',']','(', ')', '{', '}', ';', ',', ':', '\'', ':=' ,'.','$','#','@'}
@@ -27,6 +27,10 @@ class CalcLexer(Lexer):
     SEMICOLON = ';'
     START = 'start'
     ENDIF = 'endif'
+    ENDFOR = 'endfor'
+    ENDTERNARY = 'endternary'
+    ENDREAD = 'endread'
+    ENDSHOW = 'endshow'
     ENDWHILE = 'endwhile'
     END = 'end'
     VAR = 'var'
