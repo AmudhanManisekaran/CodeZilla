@@ -2,11 +2,11 @@ from sly import Lexer
 import simplejson
 
 class CalcLexer(Lexer):
-    tokens = { NUMBER, ID, WHILE, IF, ELSE, PRINT,
-               PLUS, MINUS, TIMES, DIVIDE, ASSIGN,
-               EQ, LT, LE, GT, GE, NE, FOR, ENDWHILE, ENDIF, SHOW, DO, END, LTA, GTA ,GTE,LTE}
+    tokens = { NUMBER, ID, WHILE, IF, ELSE, PRINT, START, SEMICOLON, VAR,
+               PLUS, MINUS, TIMES, DIVIDE, ASSIGN, STRING,
+               EQ, LT, LE, GT, GE, NE, FOR, ENDWHILE, ENDIF, SHOW, DO, END, LTA, GTA ,GTE,LTE,SS}
 
-    literals = { '[',']','(', ')', '{', '}', ';', ',', ':', '\'', ':=' ,'.','$'}
+    literals = { '[',']','(', ')', '{', '}', ';', ',', ':', '\'', ':=' ,'.','$','#','@'}
 
     # String containing ignored characters
     ignore = ' \t'
@@ -23,7 +23,11 @@ class CalcLexer(Lexer):
     GE      = r'>='
     GT      = r'>'
     NE      = r'!='
-
+    SS      = r'<<'
+    SEMICOLON = ';'
+    START = 'start'
+    END = 'end'
+    VAR = 'var'
 
     @_(r'\d+')
     def NUMBER(self, t):
@@ -31,7 +35,8 @@ class CalcLexer(Lexer):
         return t
 
     # Identifiers and keywords
-    ID = r'[a-zA-Z_][a-zA-Z0-9_]*'
+    STRING = r'[a-zA-Z_][a-zA-Z_][a-zA-Z0-9_]*'
+    ID = r'[a-zA-Z_]'
     ID['if'] = IF
     ID['else'] = ELSE
     ID['while'] = WHILE
@@ -41,7 +46,6 @@ class CalcLexer(Lexer):
     ID['endif'] = ENDIF
     ID['show'] = SHOW
     ID['do'] = DO
-    ID['End'] = END
     ID['<<'] = LTA
     ID['>>'] = GTA
     ID['>='] = GTE
@@ -55,20 +59,38 @@ class CalcLexer(Lexer):
         self.lineno += t.value.count('\n')
 
     def error(self, t):
-        # print('Line %d: Bad character %r' % (self.lineno, t.value[0]))
         self.index += 1
 
 if __name__ == '__main__':
 
     print("\n****************Start Execution****************\n")
-    # inputFile = input('Lexer > ')
     inputFile = 'pro.cz'
-
+    string_concat = ""
     str = open(inputFile, 'r').read()
     arr = []
     lexer = CalcLexer()
+    string = 0
+
     for tok in lexer.tokenize(str):
-       arr.append(tok.value)
+        print(tok)
+
+    for tok in lexer.tokenize(str):
+
+        if tok.type != 'STRING':
+            if string == 0:
+                arr.append(tok.value)
+            elif string == 1:
+                string_concat=string_concat[:-1]
+                arr.append(string_concat)
+                string_concat=""
+                arr.append(tok.value)
+                string = 0
+
+        if tok.type == 'STRING':
+            string = 1
+            string_concat+=tok.value
+            string_concat+='_'
+
     f = open('output.tok','w')
     simplejson.dump(arr,f)
     f.close()
@@ -79,23 +101,12 @@ if __name__ == '__main__':
     arr = f.read()
     str1=""
     str2=""
-    str3=""
 
-    print(arr)
-    
     for x in arr:
         x = x.replace('"','')
         str1+=x
 
-    print(str1)
-
     for x in str1:
-        x = x.replace('<','<"')
-        str2+=x
-
-    print(str2)
-
-    for x in str2:
         x = x.replace(';','semicolon')
         x = x.replace('(','open_para')
         x = x.replace(')','close_para')
@@ -106,11 +117,11 @@ if __name__ == '__main__':
         x = x.replace('<','less_than')
         x = x.replace('>','greater_than')
         x = x.replace(']','].')
-        str3+=x
+        str2+=x
 
     file = open('result.tok','w')
-    file.write(str3)
+    file.write(str2)
     file.close()
 
-    print(str3)
+    # print(str3)
     print("\n****************End Of Execution****************")
