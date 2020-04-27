@@ -79,27 +79,24 @@ term(X) --> fact(X).
 fact(t_fact_para(X)) --> [open_para], exprSet(X), [close_para].
 fact(t_fact(X)) --> value(X).
 
-
 value(t_value(X)) --> id(X); int1(X) ; float(X).
 
 int1(t_int(X)) --> [X], {integer(X)}.
 float(t_float(X)) --> [X], {float(X)}.
 id(t_id(I)) --> [I], {atom(I)}.
 
-/* str(t_str(I)) --> [less_than],[less_than],[I], {string(I)},[greater_than],[greater_than]. */
-str(t_str(I)) --> [less_than],[less_than], [S], {string(S)}, [greater_than],[greater_than].
+str(t_str(S)) --> [less_than],[less_than], 
+    [S], {atom(S)}, 
+    [greater_than],[greater_than].
 
 bool(true) --> [true].
 bool(false) --> [false].
 bool(t_not(X)) --> [not], bool(X).
+bool(t_greaterthanequal(X,Y)) --> exprSet(X), [greater_thanequal], exprSet(Y).
+bool(t_greaterthan(X,Y)) --> exprSet(X), [greater_than], exprSet(Y).
+bool(t_equal(X, Y)) --> exprSet(X), [equalequal], exprSet(Y).
+bool(t_lessthan(X,Y)) --> exprSet(X), [less_than], exprSet(Y).
+bool(t_lessthanequal(X,Y)) --> exprSet(X), [less_thanequal], exprSet(Y).
 bool(t_and(X,Y)) --> bool(X), [and], bool(Y).
 bool(t_or(X,Y)) --> bool(X), [or], bool(Y).
-bool(t_boolcondition(X)) --> compare_bool(X).
-bool(t_boolexpr(X)) --> exprSet(X).
-
-compare_bool(t_greaterthanequal(X,Y)) --> exprSet(X), [greater_thanequal], exprSet(Y).
-compare_bool(t_greaterthan(X,Y)) --> exprSet(X), [greater_than], exprSet(Y).
-compare_bool(t_equal(X, Y)) --> exprSet(X), [equalequal], exprSet(Y).
-compare_bool(t_lessthan(X,Y)) --> exprSet(X), [less_than], exprSet(Y).
-compare_bool(t_lessthanequal(X,Y)) --> exprSet(X), [less_thanequal], exprSet(Y).
 
