@@ -5,7 +5,7 @@ class CalcLexer(Lexer):
     tokens = { INT, ID, WHILE, IF, ELSE, PRINT, START, SEMICOLON, VAR, FLOAT,
                PLUS, MINUS, TIMES, DIVIDE, ASSIGN, STRING, ENDFOR, ENDTERNARY, ENDSHOW, ENDREAD,
                EQ, LT, LE, GT, GE, NE, FOR, ENDWHILE, ENDIF, SHOW, DO, END, LTA, GTA ,GTE,LTE,SS,
-               TRUE, FALSE}
+               TRUE, FALSE, THEN}
 
     literals = { '[',']','(', ')', '{', '}', ';', ',', ':', '\'', ':=' ,'.','$','#','@'}
 
@@ -37,6 +37,7 @@ class CalcLexer(Lexer):
     VAR = 'var'
     TRUE = 'true'
     FALSE = 'false'
+    THEN = 'then'
 
     # @_(r'\d+')
     # def NUMBER(self, t):
@@ -57,6 +58,7 @@ class CalcLexer(Lexer):
     # ID['endwhile'] = ENDWHILE
     # ID['endif'] = ENDIF
     ID['show'] = SHOW
+    ID['read'] = READ
     ID['do'] = DO
     ID['<<'] = LTA
     ID['>>'] = GTA
