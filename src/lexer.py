@@ -69,16 +69,13 @@ class CalcLexer(Lexer):
 
 if __name__ == '__main__':
 
-    print("\n****************Start Execution****************\n")
-    inputFile = 'pro.cz'
+    print("\n****************  CodeZilla - LEXER  ****************\n")
+    inputFile = input('Enter .cz File : ')
     string_concat = ""
     str = open(inputFile, 'r').read()
     arr = []
     lexer = CalcLexer()
     string = 0
-
-    for tok in lexer.tokenize(str):
-        print(tok)
 
     for tok in lexer.tokenize(str):
 
@@ -97,11 +94,11 @@ if __name__ == '__main__':
             string_concat+=tok.value
             string_concat+='_'
 
-    f = open('output.tok','w')
+    f = open('temp.tok','w')
     simplejson.dump(arr,f)
     f.close()
 
-    f = open('output.tok','r')
+    f = open('temp.tok','r')
     arr =  []
     result = []
     arr = f.read()
@@ -125,9 +122,8 @@ if __name__ == '__main__':
         x = x.replace(']','].')
         str2+=x
 
-    file = open('result.tok','w')
+    file = open('tokens.tok','w')
     file.write(str2)
     file.close()
-
-    print(str2)
-    print("\n****************End Of Execution****************")
+    # print(str2)
+    print("\n*************  tokens.tok file generated  *************\n")
