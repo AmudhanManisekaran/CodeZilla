@@ -1,0 +1,16 @@
+#program to calculate factorial
+start;
+var f;
+var n;
+var i;
+
+f = 1;
+
+read n endread;
+
+for (i = 1; i <= n; i = i + 1): f = f * i endfor;
+
+show << factorial is >> endshow;
+show f endshow;
+
+end;

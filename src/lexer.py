@@ -130,12 +130,13 @@ if __name__ == '__main__':
         x = x.replace(']','].')
         str2+=x
 
-    file = open('token.tok','w')
+    #creates an output file with the generated output file name
+    file = open(opFile,'w')
     file.write(str2)
     file.close()
-    #creates an output file with the generated output file name
-    os.rename(file.name,opFile)
+
     #Below command deletes temp.tok file
-    f.close() #close temp.tok file  
+    f.close() #close temp.tok file
     os.remove("temp.tok") #deletes temp file
+    
     print("\n*************  tokens.tok file generated  *************\n")
