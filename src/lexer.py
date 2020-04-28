@@ -1,3 +1,9 @@
+# @authors {Kartik Mathpal}, @version 1.2
+# @authors {Amudhan Manisekaran}, @version 1.3
+# @purpose Interpreting the parse tree
+# @version 1.3
+# @date 04/28/20
+
 from sly import Lexer
 import simplejson
 import os
@@ -138,5 +144,5 @@ if __name__ == '__main__':
     #Below command deletes temp.tok file
     f.close() #close temp.tok file
     os.remove("temp.tok") #deletes temp file
-    
+
     print("\n*************  tokens.tok file generated  *************\n")

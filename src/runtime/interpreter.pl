@@ -1,7 +1,7 @@
-% @authors {Amudhan Manisekaran}, @version 1.1
+% @authors {Amudhan Manisekaran}, @version 1.5
 % @authors {Mayank Rawat}, @version 1
 % @purpose Interpreting the parse tree
-% @version 1.1
+% @version 1.5
 % @date 04/28/20
 
 :- style_check(-singleton).
@@ -65,7 +65,6 @@ evalCL(t_commandLINE(X), Env, Env1):-
 
 
 /* evalCMD is used to evaluate the individual commands */
-
 evalCMD(t_command_assign(X),Env,Env1) :-
     evalAssign(X,Env,Env1).
 
@@ -242,7 +241,7 @@ evalTradForTwo(t_trad_for(t_id(X),Y,Z,T), Env1, Env4):-
     evalCL(T, Env1, Env2),
     evalExprSet(Z,Env2, Env3, _X_Val),
     evalTradForTwo(t_trad_for(t_id(X),Y,Z,T), Env3, Env4).
-    
+
 /* evalExprSet is used to handle double assignments */
 evalExprSet(t_expr(X),Env, Env2, Val):-
     evalEXPR(X, Env, Env2, Val).
