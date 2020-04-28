@@ -2,9 +2,9 @@ from sly import Lexer
 import simplejson
 
 class CalcLexer(Lexer):
-    tokens = { INT, ID, WHILE, IF, ELSE, PRINT, START, SEMICOLON, VAR, FLOAT,
+    tokens = { INT, ID, WHILE, IF, ELSE, PRINT, START, SEMICOLON, VAR, FLOAT, NOT,
                PLUS, MINUS, TIMES, DIVIDE, ASSIGN, STRING, ENDFOR, ENDTERNARY, ENDSHOW, ENDREAD,
-               EQ, LT, LE, GT, GE, NE, FOR, ENDWHILE, ENDIF, SHOW, DO, END, LTA, GTA ,GTE,LTE,SS,
+               EQ, LT, LE, GT, GE, NE, FOR, ENDWHILE, ENDIF, SHOW, READ, DO, END, LTA, GTA ,GTE,LTE,SS,
                TRUE, FALSE, THEN}
 
     literals = { '[',']','(', ')', '{', '}', ';', ',', ':', '\'', ':=' ,'.','$','#','@'}
@@ -38,7 +38,8 @@ class CalcLexer(Lexer):
     TRUE = 'true'
     FALSE = 'false'
     THEN = 'then'
-
+    NOT = 'not'
+    DO = 'do'
     # @_(r'\d+')
     # def NUMBER(self, t):
     #     t.value = int(t.value)
@@ -51,15 +52,17 @@ class CalcLexer(Lexer):
 
     ID = r'[a-zA-Z_]'
     ID['if'] = IF
+    # ID['not'] = NOT
     ID['else'] = ELSE
     ID['while'] = WHILE
     ID['print'] = PRINT
     ID['for'] = FOR
     # ID['endwhile'] = ENDWHILE
     # ID['endif'] = ENDIF
+    # ID['do'] = DO
     ID['show'] = SHOW
     ID['read'] = READ
-    ID['do'] = DO
+
     ID['<<'] = LTA
     ID['>>'] = GTA
     ID['>='] = GTE
