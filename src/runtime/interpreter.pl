@@ -117,6 +117,10 @@ evalAssign(t_assign_var(t_id(X),Y),Env, Env2):-
     evalExprSet(Y, Env, Env1, Val),
     update(X, Val, Env1, Env2).
 
+evalAssign(t_assign_bool(t_id(X),Y),Env, Env2):-
+    evalBOOL(Y, Env, Val),
+    update(X, Val, Env, Env2).
+
 evalAssign(t_assign_str(t_id(X),t_str(Y)),Env, Env2):-
     update(X, Y, Env, Env2).
 
@@ -148,19 +152,71 @@ evalFor(t_for(t_id(U),t_value(t_int(X)),t_value(t_int(Y)),C), Env, Env3):-
 evalFor(t_for(_U,t_value(t_int(X)),t_value(t_int(Y)),_C), Env, Env):-
     X >= Y.
 
+evalFor(t_for(t_id(U),t_value(t_id(X)),t_value(t_id(Y)),C), Env, Env3):-
+    lookup(X, Env, Val1),
+    lookup(Y, Env, Val2),
+    update(U, Val1, Env, Env1),
+    lookup(U, Env1, U_Val),
+    U_Val < Val2,
+    evalCL(C, Env1, Env2),
+    U1 is U_Val + 1,
+    evalFor(t_for(t_id(U),t_value(t_int(U1)),t_value(t_int(Val2)),C), Env2, Env3).
+
+evalFor(t_for(_U,t_value(t_id(X)),t_value(t_id(Y)),_C), Env, Env):-
+    lookup(X, Env, Val1),
+    lookup(Y, Env, Val2),
+    Val1 >= Val2.
+
+evalFor(t_for(t_id(U),t_value(t_id(X)),t_value(t_int(Y)),C), Env, Env3):-
+    lookup(X, Env, Val1),
+    update(U, Val1, Env, Env1),
+    lookup(U, Env1, U_Val),
+    U_Val < Y,
+    evalCL(C, Env1, Env2),
+    U1 is U_Val + 1,
+    evalFor(t_for(t_id(U),t_value(t_int(U1)),t_value(t_int(Y)),C), Env2, Env3).
+
+evalFor(t_for(_U,t_value(t_id(X)),t_value(t_int(Y)),_C), Env, Env):-
+    lookup(X, Env, Val1),
+    Val1 >= Y.
+
+evalFor(t_for(t_id(U),t_value(t_int(X)),t_value(t_id(Y)),C), Env, Env3):-
+    lookup(Y, Env, Val2),
+    update(U, X, Env, Env1),
+    lookup(U, Env1, U_Val),
+    U_Val < Val2,
+    evalCL(C, Env1, Env2),
+    U1 is U_Val + 1,
+    evalFor(t_for(t_id(U),t_value(t_int(U1)),t_value(t_int(Val2)),C), Env2, Env3).
+
+evalFor(t_for(_U,t_value(t_int(X)),t_value(t_id(Y)),_C), Env, Env):-
+    lookup(Y, Env, Val2),
+    X >= Val2.
+
+
 evalTradFor(t_trad_for(t_id(X),t_value(t_int(V)),Y,_Z,_T), Env, Env1):-
     update(X, V, Env, Env1),
     evalBOOL(Y, Env1, false).
 
 evalTradFor(t_trad_for(t_id(X),t_value(t_int(V)),Y,Z,T), Env, Env4):-
     update(X, V, Env, Env1),
-
     evalBOOL(Y, Env1, true),
-
     evalCL(T, Env1, Env2),
-
     evalExprSet(Z,Env2, Env3, _X_Val),
+    evalTradForTwo(t_trad_for(t_id(X),Y,Z,T), Env3, Env4).
 
+
+evalTradFor(t_trad_for(t_id(X),t_value(t_id(V)),Y,_Z,_T), Env, Env1):-
+    lookup(V, Env, Val),
+    update(X, Val, Env, Env1),
+    evalBOOL(Y, Env1, false).
+
+evalTradFor(t_trad_for(t_id(X),t_value(t_id(V)),Y,Z,T), Env, Env4):-
+    lookup(V, Env, Val),
+    update(X, Val, Env, Env1),
+    evalBOOL(Y, Env1, true),
+    evalCL(T, Env1, Env2),
+    evalExprSet(Z,Env2, Env3, _X_Val),
     evalTradForTwo(t_trad_for(t_id(X),Y,Z,T), Env3, Env4).
 
 evalTradForTwo(t_trad_for(t_id(_X),Y,_Z,_T), Env, Env):-
@@ -172,6 +228,15 @@ evalTradForTwo(t_trad_for(t_id(X),Y,Z,T), Env1, Env4):-
     evalExprSet(Z,Env2, Env3, _X_Val),
     evalTradForTwo(t_trad_for(t_id(X),Y,Z,T), Env3, Env4).
 
+evalTradForTwo(t_trad_for(t_id(_X),Y,_Z,_T), Env, Env):-
+    evalBOOL(Y, Env, false).
+
+evalTradForTwo(t_trad_for(t_id(X),Y,Z,T), Env1, Env4):-
+    evalBOOL(Y, Env1, true),
+    evalCL(T, Env1, Env2),
+    evalExprSet(Z,Env2, Env3, _X_Val),
+    evalTradForTwo(t_trad_for(t_id(X),Y,Z,T), Env3, Env4).
+    
 /* evalExprSet is used to handle double assignments */
 evalExprSet(t_expr(X),Env, Env2, Val):-
     evalEXPR(X, Env, Env2, Val).

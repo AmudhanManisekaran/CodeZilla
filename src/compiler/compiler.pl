@@ -48,7 +48,7 @@ c(t_command_read(X)) --> readvar(X).
 
 assign(t_assign_str(X,Y)) --> id(X),[equal], str(Y).
 assign(t_assign_var(X,Y)) --> id(X),[equal], exprSet(Y).
-
+assign(t_assign_bool(X,Y)) --> id(X),[equal], bool(Y).
 if(t_if(X,Y)) -->
     [if], bool(X), [then], cl(Y), [endif].
 

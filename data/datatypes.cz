@@ -1,0 +1,23 @@
+#program to test datatypes
+start;
+var x;
+var y;
+
+var i;
+var f;
+var s;
+
+x = 10 < 20 and 9 < 2;
+y = 10 < 20 or 9 < 2;
+
+i = 100;
+f = 10.11;
+s = << end >>;
+
+show x endshow;
+show y endshow;
+show i endshow;
+show f endshow;
+show s endshow;
+
+end;
