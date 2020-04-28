@@ -1,6 +1,6 @@
 # @authors {Kartik Mathpal}, @version 1.2
 # @authors {Amudhan Manisekaran}, @version 1.3
-# @purpose Interpreting the parse tree
+# @purpose Breaking down code into tokens
 # @version 1.3
 # @date 04/28/20
 
