@@ -2,28 +2,32 @@
 ![codezilla](codezilla.png)
 **SER 502 Project: Compiler and Virtual Machine for a Programming Language**
 
-Required: Python3 installed.
+**Required:** Python3, SWI-Prolog installed.
 
-## YouTube link:**
+## YouTube link:
 [CodeZilla](https://youtube.com/)
 
 ## Installation
-- Import project folder in your IDE.
 - Use the package manager [pip](https://pip.pypa.io/en/stable/) to install libraries required for the lexical analyzer.
 ```bash
 pip install sly
 pip install simplejson
 ```
 
-
-
-
-
-
-
-System on which your compiler and runtime are built (GNUstep, Linux, Unix, Windows or Mac OS)
-o Tools used
-o Directions/instructions to install your language
-o Directions/instructions to build and run your language (compiler/runtime).
-o ONE LINE of bash script that builds the compiler and ONE LINE that runs the runtime.
-o Link to the YouTube video
+##Runtime steps
+- Import project folder in your local system.
+- Create the CodeZilla (.cz) file in 'data' folder.
+- In the 'src' folder, run the lexical analyzer as
+```bash
+python lexer.py
+```
+- Input the desired file's name to generate the token (.tok) file in the 'data' folder.
+- In the 'src/compiler' folder, execute the compiler in SWI Prolog to generate the parse tree (.pt) file in the 'data' folder.
+```bash
+?- codezilla('filename.tok')
+```
+- In the 'src/interpreter' folder, execute the interpreter in SWI Prolog to evaluate the parse tree.
+```bash
+?- codezilla('filename.pt')
+```
+- The output will be displayed in the SWI Prolog terminal.
