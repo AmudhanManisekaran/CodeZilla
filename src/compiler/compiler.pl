@@ -60,22 +60,22 @@ assign(t_assign_str(X,Y)) --> id(X),[equal], str(Y).
 assign(t_assign_var(X,Y)) --> id(X),[equal], exprSet(Y).
 assign(t_assign_bool(X,Y)) --> id(X),[equal], bool(Y).
 
-/ * if represents the regular conditional structure */
+/* if represents the regular conditional structure */
 if(t_if(X,Y)) -->
     [if], bool(X), [then], cl(Y), [endif].
 
-/ * ifelse represents the alternative conditional structure */
+/* ifelse represents the alternative conditional structure */
 ifelse(t_ifelse(X,Y,Z)) -->
     [if], bool(X), [then], cl(Y), [else], cl(Z), [endif].
 
-/ * loops represents the looping constructs */
+/* loops represents the looping constructs */
 loops(t_loops(X)) -->  while(X); for(X); trad_for(X).
 
-/ * ternary represents the ternary operator */
+/* ternary represents the ternary operator */
 ternary(t_ternary(U,X,Y,Z)) --> id(U),[equal], bool(X), [ $ ],
     exprSet(Y), [/], exprSet(Z), [endternary].
 
-/ * show represents the out statement and read represents the in statement */
+/* show represents the out statement and read represents the in statement */
 show(t_show(X)) --> [show], data(X), [endshow].
 readvar(t_read(X)) --> [read], id(X), [endread].
 
