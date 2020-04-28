@@ -72,7 +72,11 @@ class CodeZillaLexer(Lexer):
 if __name__ == '__main__':
 
     print("\n****************  CodeZilla - LEXER  ****************\n")
+    #updates output directory
+    os.chdir('../data')
     inputFile = input('Enter .cz File : ')
+    #generates output file name
+    opFile = inputFile[:-3]+ ".tok"
     string_concat = ""
     str = open(inputFile, 'r').read()
     arr = []
@@ -126,9 +130,11 @@ if __name__ == '__main__':
         x = x.replace(']','].')
         str2+=x
 
-    file = open('tokens.tok','w')
+    file = open('token.tok','w')
     file.write(str2)
     file.close()
+    #creates an output file with the generated output file name
+    os.rename(file.name,opFile)
     #Below command deletes temp.tok file
     f.close() #close temp.tok file  
     os.remove("temp.tok") #deletes temp file
