@@ -1,0 +1,1 @@
+[start, semicolon, var, a, semicolon, var, b, semicolon, var, c, semicolon, c, equal, 0, semicolon, read, a, endread, semicolon, read, b, endread, semicolon, c, equal, a, +, b, semicolon, show, less_than, less_than, sum_of_two_numbers_is, greater_than, greater_than, endshow, semicolon, show, c, endshow, semicolon, end, semicolon].

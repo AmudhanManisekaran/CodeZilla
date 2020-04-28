@@ -1,0 +1,20 @@
+#program to test conditional statements
+start;
+var x;
+var y;
+var t;
+
+x = 99;
+y = 100;
+
+if x == 99 then y = 99; show y endshow else y = 101; show y endshow endif;
+
+if x == 99 then y = 102; show y endshow endif;
+
+t = x > 10 $ 1 / 2 endternary;
+show t endshow;
+
+e = x = (81 / 3) * (5 - 2) + (3 * 9);
+show e endshow;
+
+end;

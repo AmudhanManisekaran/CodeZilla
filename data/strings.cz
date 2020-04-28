@@ -1,0 +1,14 @@
+#program to test strings
+
+start;
+
+str a;
+str b;
+
+a = << hello >>;
+b = << from >>;
+
+show a endshow;
+show b endshow;
+show << codezilla >> endshow;
+end;

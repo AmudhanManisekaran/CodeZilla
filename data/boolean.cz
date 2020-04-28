@@ -1,0 +1,31 @@
+#program to test boolean expressions
+start;
+var x;
+var y;
+
+x = 10;
+y = 20;
+
+if not ( x == y ) then show << pass >> endshow endif;
+if x == y then show << fail >> endshow endif;
+
+
+if x < 11 then show << pass >> endshow endif;
+if y < 11 then show << fail >> endshow endif;
+
+
+if x > 9 then show << pass >> endshow endif;
+if y > 20 then show << fail >> endshow endif;
+
+if x <= 10 then show << pass >> endshow endif;
+if y <= 19 then show << fail >> endshow endif;
+
+
+if x >= 9 then show << pass >> endshow endif;
+if y >= 30 then show << fail >> endshow endif;
+
+
+if x > 5 or y < 15 then show << pass >> endshow endif;
+if x > 5 and y < 15 then show << fail >> endshow endif;
+
+end;

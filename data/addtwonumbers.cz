@@ -1,0 +1,18 @@
+#program to add two numbers
+start;
+
+var a;
+var b;
+var c;
+
+c = 0;
+
+read a endread;
+read b endread;
+
+c = a + b;
+
+show << sum of two numbers is >> endshow;
+show c endshow;
+
+end;

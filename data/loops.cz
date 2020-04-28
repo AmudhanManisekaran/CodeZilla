@@ -1,0 +1,18 @@
+#program to test loops
+start;
+var x;
+var y;
+var k;
+var m;
+
+x = 10;
+y = 20;
+
+
+while x > 6 do x = x - 2; show x endshow endwhile;
+
+for (k = 0; k < y; k = k + 5): show k endshow endfor;
+
+for m inrange (5:15): show m endshow endfor;
+
+end;
