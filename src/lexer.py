@@ -1,7 +1,7 @@
 from sly import Lexer
 import simplejson
-
-class CalcLexer(Lexer):
+import os
+class CodeZillaLexer(Lexer):
     tokens = { INT, ID, WHILE, IF, ELSE, PRINT, START, SEMICOLON, VAR, FLOAT,
                NOT, PLUS, MINUS, TIMES, DIVIDE, ASSIGN, STRING, ENDFOR,
                ENDTERNARY, ENDSHOW, ENDREAD, EQ, LT, LE, GT, GE, NE, FOR,
@@ -76,7 +76,7 @@ if __name__ == '__main__':
     string_concat = ""
     str = open(inputFile, 'r').read()
     arr = []
-    lexer = CalcLexer()
+    lexer = CodeZillaLexer()
     string = 0
 
     # Handling strings
@@ -129,4 +129,6 @@ if __name__ == '__main__':
     file = open('tokens.tok','w')
     file.write(str2)
     file.close()
+    #Below command deletes temp.tok file 
+    os.remove("temp.tok") #deletes temp file
     print("\n*************  tokens.tok file generated  *************\n")
