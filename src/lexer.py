@@ -2,9 +2,10 @@ from sly import Lexer
 import simplejson
 
 class CalcLexer(Lexer):
-    tokens = { INT, ID, WHILE, IF, ELSE, PRINT, START, SEMICOLON, VAR, FLOAT, NOT,
-               PLUS, MINUS, TIMES, DIVIDE, ASSIGN, STRING, ENDFOR, ENDTERNARY, ENDSHOW, ENDREAD,
-               EQ, LT, LE, GT, GE, NE, FOR, ENDWHILE, ENDIF, SHOW, READ, DO, END, LTA, GTA ,GTE,LTE,SS,
+    tokens = { INT, ID, WHILE, IF, ELSE, PRINT, START, SEMICOLON, VAR, FLOAT,
+               NOT, PLUS, MINUS, TIMES, DIVIDE, ASSIGN, STRING, ENDFOR,
+               ENDTERNARY, ENDSHOW, ENDREAD, EQ, LT, LE, GT, GE, NE, FOR,
+               ENDWHILE, ENDIF, SHOW, READ, DO, END, LTA, GTA ,GTE,LTE,SS,
                TRUE, FALSE, THEN}
 
     literals = { '[',']','(', ')', '{', '}', ';', ',', ':', '\'', ':=' ,'.','$','#','@'}
@@ -40,29 +41,19 @@ class CalcLexer(Lexer):
     THEN = 'then'
     NOT = 'not'
     DO = 'do'
-    # @_(r'\d+')
-    # def NUMBER(self, t):
-    #     t.value = int(t.value)
-    #     return t
 
     # Identifiers and keywords
     STRING = r'[a-zA-Z_][a-zA-Z_][a-zA-Z0-9_]*'
     FLOAT = r'[0-9_]*[.][0-9_]*'
     INT = r'[0-9_][0-9_]*'
-
     ID = r'[a-zA-Z_]'
     ID['if'] = IF
-    # ID['not'] = NOT
     ID['else'] = ELSE
     ID['while'] = WHILE
     ID['print'] = PRINT
     ID['for'] = FOR
-    # ID['endwhile'] = ENDWHILE
-    # ID['endif'] = ENDIF
-    # ID['do'] = DO
     ID['show'] = SHOW
     ID['read'] = READ
-
     ID['<<'] = LTA
     ID['>>'] = GTA
     ID['>='] = GTE
@@ -88,11 +79,8 @@ if __name__ == '__main__':
     lexer = CalcLexer()
     string = 0
 
-    # for tok in lexer.tokenize(str):
-    #     print(tok)
-
+    # Handling strings
     for tok in lexer.tokenize(str):
-
         if tok.type != 'STRING':
             if string == 0:
                 arr.append(tok.value)
@@ -108,6 +96,7 @@ if __name__ == '__main__':
             string_concat+=tok.value
             string_concat+='_'
 
+    # Maintaining temporary token file for processing
     f = open('temp.tok','w')
     simplejson.dump(arr,f)
     f.close()
@@ -119,6 +108,7 @@ if __name__ == '__main__':
     str1=""
     str2=""
 
+    # Replacing tokens with keywords for parser operations
     for x in arr:
         x = x.replace('"','')
         str1+=x
@@ -139,5 +129,4 @@ if __name__ == '__main__':
     file = open('tokens.tok','w')
     file.write(str2)
     file.close()
-    # print(str2)
     print("\n*************  tokens.tok file generated  *************\n")
