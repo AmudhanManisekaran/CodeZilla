@@ -1,3 +1,9 @@
+% @authors {Amudhan Manisekaran}, @version 1.1
+% @authors {Mayank Rawat}, @version 1
+% @purpose Interpreting the parse tree
+% @version 1.1
+% @date 04/28/20
+
 :- style_check(-singleton).
 
 codezilla(FileName):-
