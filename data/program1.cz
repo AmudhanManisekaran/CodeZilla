@@ -22,8 +22,6 @@ while x > 5 do show x endshow; x = x - 1 endwhile;
 
 for(f = 10; f < 20; f = f + 2): show f endshow endfor;
 
-for g inrange(10:12): read g endread; show g endshow endfor;
-
 b = b > 0 $ 9 / 10 endternary;
 
 end;

@@ -10,8 +10,10 @@ readFile(File, Final):-
 
 % Read the program from a file and returns the parse tree
 codezilla(FileName) :-
+    working_directory(_, '../../data'),
     readFile(FileName, Tokens),
     parser(ParseTree, Tokens, []),
+    write(ParseTree),
     split_string(FileName, ".", "", L),
     L = [H|_T],
     atom_concat(H, ".pt", X),

@@ -1,6 +1,7 @@
 :- style_check(-singleton).
 
 codezilla(FileName):-
+    working_directory(_, '../../data'),
     open(FileName, read, InStream),
     read(InStream, X),
     close(InStream),
