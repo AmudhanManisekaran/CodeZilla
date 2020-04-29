@@ -57,3 +57,10 @@
     runtime.bat
 ```
 - When prompted, input the desired file's name to obtain the output.
+
+## Extra features added
+- Supports code with user input prompts (read).
+- Comparison operators <, <=, >, >=, == are implemented.
+- Single line comments can be made anywhere in the code.
+- Int and float datatypes are supported.
+- Paranthesis in expression assignment.
