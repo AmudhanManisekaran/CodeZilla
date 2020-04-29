@@ -44,6 +44,8 @@
 **Set up environment variables for:**
 - Python3
 - SWIPL.
+
+
 ![environment_variables](environment_variables.PNG)
 
 - Navigate to 'src/batch/' and open command prompt.
