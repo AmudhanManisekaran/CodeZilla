@@ -13,6 +13,9 @@
 ## YouTube link
 [CodeZilla](https://www.youtube.com/watch?v=pqQUxUurmqc&t=470s)
 
+## Presentation link
+[Presentation slides PDF](/doc/Presentation.pdf)
+
 ## Installation
 - Use the package manager [pip](https://pip.pypa.io/en/stable/) to install libraries required for the lexical analyzer.
 ```bash
